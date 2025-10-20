@@ -1,26 +1,221 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.custom-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.text-warmGray {
+    color: #3e2723;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.text-champacnePink {
+  color: #e7c7c8;
 }
+
+.text-deepCocoa {
+  color: #35281e;
+}
+
+.text-clashmereGlow {
+  color: #e2d6c8;
+}
+
+.text-bareVeile {
+  color: #e94e95;
+}
+
+.text-dustyRose {
+  color: #c29c96;
+}
+
+.text-warmGray {
+    color: #3e2723;
+}
+
+.bg-champacnePink {
+  background-color: #e7c7c8;
+}
+
+.bg-deepCocoa {
+  background-color: #35281e;
+}
+
+.bg-clashmereGlow {
+  background-color: #e2d6c8;
+}
+
+.bg-bareVeile {
+  background-color: #e94e95;
+}
+
+.bg-dustyRose {
+  background-color: #c29c96;
+}
+
+/* 🌸 Baby Pink Tape + White Style for react-calendar */
+
+.react-calendar {
+  width: 100%;
+  max-width: 360px;
+  background: transparent;
+  border: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.125em;
+  padding: 8px;
+}
+
+/* 🔷 Навигация — кнопки и заголовок месяца */
+.react-calendar__navigation {
+  height: 50px;
+  margin-bottom: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.react-calendar__navigation button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #be185d;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.react-calendar__navigation button:hover,
+.react-calendar__navigation button:focus {
+  background-color: #fdf2f8;
+  transform: scale(1.1);
+  color: #ec4899;
+}
+
+.react-calendar__navigation__label {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #571e3d;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: #fdf2f8;
+  box-shadow: 0 2px 6px rgba(244, 114, 182, 0.15);
+}
+
+.react-calendar__navigation__label:hover {
+  background: #fce7f3;
+}
+
+/* 📅 Заголовки дней недели */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #be185d;
+  margin-bottom: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em 0;
+}
+
+/* 📆 Ячейки дней */
+.react-calendar__month-view__days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.react-calendar__month-view__days__day {
+  padding: 0.75em 0;
+  border-radius: 12px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  color: #571e3d;
+  background: white;
+  border: 2px solid transparent;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.react-calendar__month-view__days__day:hover {
+  background: #fdf2f8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(249, 168, 212, 0.3);
+}
+
+/* 💖 Сегодня */
+.react-calendar__tile--now {
+  background: #fce7f3 !important;
+  color: #be185d !important;
+  font-weight: 700;
+  border: 2px solid #f9a8d4 !important;
+  box-shadow: 0 0 0 2px rgba(244, 114, 182, 0.2) !important;
+}
+
+/* 🎯 Выбранный день */
+.react-calendar__tile--active {
+  background: linear-gradient(135deg, #f472b6, #f9a8d4) !important;
+  color: white !important;
+  font-weight: 700;
+  border: none !important;
+  box-shadow: 0 6px 16px rgba(244, 114, 182, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 📆 Диапазон (если selectRange=true) */
+.react-calendar__tile--range {
+  background: #fdf2f8 !important;
+  color: #571e3d !important;
+  border-radius: 8px !important;
+}
+
+.react-calendar__tile--rangeStart,
+.react-calendar__tile--rangeEnd {
+  background: linear-gradient(135deg, #f472b6, #f9a8d4) !important;
+  color: white !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3) !important;
+}
+
+/* ❤️ Выходные — розовый акцент */
+.react-calendar__month-view__days__day--weekend {
+  color: #be185d;
+  font-weight: 600;
+}
+
+/* ⛔ Отключённые дни */
+.react-calendar__tile--disabled {
+  background: #fefefe !important;
+  color: #e5e7eb !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+  border-color: #f3f4f6 !important;
+}
+
+/* 🌸 Анимация при выборе */
+@keyframes gentlePulse {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(-4px); }
+}
+
+.react-calendar__tile--active {
+  animation: gentlePulse 2s infinite ease-in-out;
+}
+

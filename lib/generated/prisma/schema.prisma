@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(255)
+  description String?   @db.Text
+  subject     String? // например: "Терапевтическая стоматология", "Фармакология"
+  type        TaskType? @default(STUDY)
+  priority    Priority  @default(MEDIUM)
+  status      Status    @default(ACTIVE)
+  deadline    DateTime? // дедлайн (например, 15.04.2025 20:00)
+  reminder    DateTime? // когда прислать напоминание (например, за 15 мин)
+  duration    Int? // сколько минут планируется (для таймера)
+  isRecurring Boolean   @default(false)
+  completed   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  /// Уведомление отправлено? (чтобы не дублировать)
+  reminderSent Boolean @default(false)
+}
+
+enum TaskType {
+  STUDY /// Учить теорию
+  PRACTICE /// Практиковать навыки (на манекене, в клинике)
+  EXAM /// Подготовка к экзамену
+  TEST /// Пройти тест
+  CONSULTATION /// Приём пациентов
+  ABSTRACT /// Написать конспект
+  PRESENTATION /// Подготовить доклад
+  REPEAT /// Повторение (spaced repetition)
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum Status {
+  ACTIVE /// В процессе
+  COMPLETED /// Готово
+  POSTPONED /// Отложено
+  CANCELLED /// Отменено
+}
