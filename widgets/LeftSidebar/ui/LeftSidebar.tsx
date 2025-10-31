@@ -2,17 +2,19 @@
 
 import { useState } from "react"
 import { SidebarSection } from "@/components/SidebarSection"
-import { Calendar1, House, Notebook, Phone, PictureInPicture2, Rocket, Menu } from "lucide-react"
+import { Calendar1, House, Notebook, PictureInPicture2, Menu, Hourglass, Music } from "lucide-react"
 import Image from "next/image"
 
 export default function LeftSidebar() {
     const [open, setOpen] = useState(false)
 
     const appsList = [
-        { link: "contacts", app: "Контакты", icon: <Phone />},
         { link: "notes", app: "Заметки", icon: <Notebook />},
         { link: "tasks", app: "Задачи", icon: <PictureInPicture2 />},
         { link: "calendar", app: "Календарь", icon: <Calendar1 />},
+        { link: "timer", app: "Таймер", icon: <Hourglass />},
+        { link: "music", app: "Музыка", icon: <Music />},
+
     ]
     const homeList = [
         { link: "/", app: "Панель",  icon: <House />}
@@ -57,10 +59,10 @@ export default function LeftSidebar() {
                 </div>
                 {/* Заголовок */}
                 <div className="flex items-end gap-3 py-4">
-                    <div className="w-12 h-12">
+                    <div className="w-12 h-12"> 
                         <Image src="/logo.png" width={48} height={48} alt="" className="object-contain w-full h-full" />
                     </div>
-                    <h1 className="font-bold text-2xl text-black-500">Планировщик </h1>
+                    <h1 className="font-bold text-2xl text-black-500">Dental Study Assitant</h1>
                 </div>
                 {/* Главная/home */}
                 <SidebarSection title="Главная" items={homeList} />

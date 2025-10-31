@@ -32,12 +32,12 @@ export function scheduleReminder(task: {
 const timerId = setTimeout(async () => {
   try {
     const message = `
-🔔 *НАПОМИНАНИЕ*
-📌 *${task.title}*
-📅 Срок: ${task.deadline ? new Date(task.deadline).toLocaleString('ru-RU') : 'не указан'}
-⏱ Длительность: ${task.duration ? `${task.duration} мин` : 'не указана'}
-📚 Тема: ${task.subject || '—'}
-📝 Описание: ${task.description || '—'}
+      🔔 *НАПОМИНАНИЕ*
+      📌 *${task.title}*
+      📅 Срок: ${task.deadline ? new Date(task.deadline).toLocaleString('ru-RU') : 'не указан'}
+      ⏱ Длительность: ${task.duration ? `${task.duration} мин` : 'не указана'}
+      📚 Тема: ${task.subject || '—'}
+      📝 Описание: ${task.description || '—'}
     `.trim();
 
     const res = await fetch(`${TELEGRAM_API}/sendMessage`, {

@@ -2,6 +2,14 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+* {
+  box-sizing: border-box;
+}
+
+li {
+  list-style-type: none;
+}
+
 .custom-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
