@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { sounds } from '@/data/sounds';
-import { ArrowLeft, ArrowRight, Pause, Play, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Pause, Play, Trash, Volume2, VolumeX } from 'lucide-react';
 
 const formatTime = (seconds: number): string => {
   if (isNaN(seconds) || seconds === Infinity) return '0:00';
@@ -12,23 +11,55 @@ const formatTime = (seconds: number): string => {
 };
 
 export default function MusicPlayer() {
+  const [tracks, setTracks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.7);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const currentTrack = sounds[currentTrackIndex];
+  // --- ШТАТЫ ДЛЯ ЗАГРУЗКИ ---
+  const [uploadTitle, setUploadTitle] = useState('');
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
-  // 🎚️ Синхронизация громкости
+  const currentTrack = tracks[currentTrackIndex];
+
+  // ───────────────────────
+  // 1. Загрузка треков с API
+  // ───────────────────────
+  useEffect(() => {
+    const loadTracks = async () => {
+      try {
+        const res = await fetch('/api/music');
+        const data = await res.json();
+        setTracks(data);
+      } catch (error) {
+        console.error("Ошибка загрузки трека:", error instanceof Error ? error.message : error);
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadTracks();
+  }, []);
+
+  // ────────────────
+  // 2. Синхрон громкости
+  // ────────────────
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
   }, [volume]);
 
-  // 📈 Обновление прогресса
+  // ────────────────
+  // 3. Прогресс
+  // ────────────────
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -53,7 +84,9 @@ export default function MusicPlayer() {
     };
   }, [currentTrack]);
 
-  // ▶️ Переключение воспроизведения
+  // ────────────────
+  // 4. Play / Pause
+  // ────────────────
   const togglePlay = async () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -72,37 +105,33 @@ export default function MusicPlayer() {
     }
   };
 
-  // ⏭️ Следующий трек после окончания
+  // ────────────────
+  // 5. Следующий трек
+  // ────────────────
   const playNextTrack = () => {
-    setCurrentTrackIndex((prev) => (prev + 1) % sounds.length);
+    setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
     setIsPlaying(true);
   };
 
-  // 🔁 Автоматическое воспроизведение при смене трека
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.load(); // перезагружаем источник
+    audio.load();
 
     if (isPlaying) {
-      audio
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch((error) => {
-          console.warn('Не удалось воспроизвести новый трек:', error);
-          setIsPlaying(false);
-        });
+      audio.play().catch(() => setIsPlaying(false));
     }
   }, [currentTrackIndex]);
 
-  // 📀 Выбор трека из списка
   const handleTrackSelect = (index: number) => {
     setCurrentTrackIndex(index);
     setIsPlaying(true);
   };
 
-  // ⏩ Перемотка
+  // ────────────────
+  // 6. Перемотка
+  // ────────────────
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newProgress = parseFloat(e.target.value);
     setProgress(newProgress);
@@ -111,50 +140,158 @@ export default function MusicPlayer() {
     }
   };
 
-  // ⏮️ ⏭️ Переключение вручную
   const playPrevTrack = () => {
-    setCurrentTrackIndex((prev) => (prev - 1 + sounds.length) % sounds.length);
+    setCurrentTrackIndex((prev) => (prev - 1 + tracks.length) % tracks.length);
     setIsPlaying(true);
   };
 
   const playNextManual = () => {
-    setCurrentTrackIndex((prev) => (prev + 1) % sounds.length);
+    setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
     setIsPlaying(true);
   };
 
+  // ───────────────────────────────
+  // 7. Загрузка аудио на сервер
+  // ───────────────────────────────
+  const handleUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!uploadTitle || !uploadFile) return;
+
+    const formData = new FormData();
+    formData.append('title', uploadTitle);
+    formData.append('file', uploadFile);
+
+    setUploading(true);
+
+    try {
+      const res = await fetch('/api/music', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const newTrack = await res.json();
+
+      setTracks((prev) => [...prev, newTrack]);
+
+      setUploadTitle('');
+      setUploadFile(null);
+    } catch (error) {
+      console.error('Ошибка загрузки трека:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const deleteTrack = async (id: number) => {
+    if (!confirm("Удалить трек?")) return;
+
+    try {
+      const res = await fetch(`/api/music/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Ошибка удаления");
+
+      setTracks((prev) => prev.filter((t) => t.id !== id));
+
+      if (currentTrackIndex >= tracks.length - 1) {
+        setCurrentTrackIndex(0);
+      }
+    } catch (error) {
+      console.error("Ошибка удаления трека:", error);
+      alert("Не удалось удалить трек");
+    }
+  };
+
+  if (loading) {
+    return <div className="text-white p-4">Загрузка...</div>;
+  }
+
   return (
     <div className="text-white flex flex-col justify-between p-4 gap-6">
+      <form onSubmit={handleUpload} className="bg-white/40 p-4 rounded-xl">
+        <input
+          type="text"
+          placeholder="Название трека"
+          value={uploadTitle}
+          onChange={(e) => setUploadTitle(e.target.value)}
+          className="w-full mb-2 p-2 rounded bg-white text-black"
+        />
+
+        <input
+          type="file"
+          accept="audio/*"
+          onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+          className="w-full mb-2 text-black"
+        />
+
+        <button
+          type="submit"
+          disabled={uploading}
+          className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-xl w-full"
+        >
+          {uploading ? 'Загрузка...' : 'Загрузить трек'}
+        </button>
+      </form>
+      
       {/* 🎵 Список треков */}
       <div className="bg-white/50 rounded-xl p-4 w-full shadow-2xl overflow-y-scroll max-h-96">
         <h4 className="text-base font-semibold text-black mb-2">Список треков:</h4>
         <ul className="space-y-2">
-          {sounds.map((track, index) => (
-            <li
-              key={index}
-              onClick={() => handleTrackSelect(index)}
-              className={`p-1.5 rounded-lg cursor-pointer transition flex items-center gap-1 text-black ${
-                index === currentTrackIndex
-                  ? 'bg-pink-600/50 border-l-2 border-pink-400 text-white'
-                  : ''
-              }`}
-            >
-              <span>{track.id}.</span>
-              <span className="font-medium text-sm">{track.title}</span>
-            </li>
-          ))}
+          {tracks.length === 0 ? (
+            <li className="text-black/70 text-sm italic">Нет загруженных треков</li>
+          ) : (
+            tracks.map((track, index) => (
+              <li
+                key={track.id}
+                onClick={() => handleTrackSelect(index)}
+                className={`p-1.5 rounded-lg cursor-pointer transition flex items-center justify-between gap-1 text-black ${
+                  index === currentTrackIndex
+                    ? 'bg-pink-600/50 border-l-2 border-pink-400 text-white'
+                    : ''
+                }`}
+              >
+                <div className='flex items-center space-x-1'>
+                  <span>{index + 1}.</span>
+                  <span className="font-medium text-sm">{track.title}</span>
+                </div>
+                
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteTrack(track.id);
+                  }}
+                  className={` hover:scale-105 transition-all text-sm font-bold cursor-pointer
+                    ${index === currentTrackIndex ? '' : 'text-red-600 hover:text-red-800'}
+                    `}
+                >
+                  <Trash />
+                </button>
+              </li>
+            ))
+          )}
         </ul>
       </div>
 
-      {/* 🕹️ Панель управления */}
+      {/* 🕹️ Панель */}
       <div className="w-full bg-white/30 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-white/10">
-        <div className="p-6 text-center border-b border-white/10">
-          <h3 className="text-xl mt-2 font-semibold text-deepCocoa truncate">
-            {currentTrack.title}
-          </h3>
-        </div>
+        {currentTrack ? (
+          <div className="w-full backdrop-blur-lg rounded-2xl overflow-hidden border border-white/10">
+            <div className="p-6 text-center border-b border-white/10">
+              <h3 className="text-xl mt-2 font-semibold text-deepCocoa truncate">
+                {currentTrack.title}
+              </h3>
+            </div>
+          </div>
+        ) : (
+          <div className="text-white p-4 bg-white/20 rounded-xl text-center">
+            Нет треков для воспроизведения
+          </div>
+        )}
 
         <div className="p-6 flex flex-col items-center space-y-6">
-          {/* ▶️ Кнопки управления */}
+
           <div className="flex space-x-4">
             <button onClick={playPrevTrack} className="text-black cursor-pointer">
               <ArrowLeft />
@@ -172,7 +309,7 @@ export default function MusicPlayer() {
             </button>
           </div>
 
-          {/* ⏱️ Прогресс */}
+          {/* Прогресс */}
           <div className="w-full max-w-xl">
             <div className="flex justify-between text-xs text-deepCocoa mb-1">
               <span>{formatTime(progress * duration)}</span>
@@ -189,7 +326,7 @@ export default function MusicPlayer() {
             />
           </div>
 
-          {/* 🔊 Громкость */}
+          {/* Громкость */}
           <div className="w-42 flex items-center space-x-6">
             {volume === 0 ? <VolumeX color="black" size={32}/> : <Volume2 color="black" size={32}/>}
             <input
@@ -205,14 +342,16 @@ export default function MusicPlayer() {
         </div>
       </div>
 
-      {/* 🎧 Аудиоэлемент */}
-      <audio
-        ref={audioRef}
-        src={currentTrack.url}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onEnded={playNextTrack}
-      />
+      {/* Аудио */}
+      {currentTrack && (
+        <audio
+          ref={audioRef}
+          src={currentTrack.url}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={playNextTrack}
+        />
+      )}
     </div>
   );
 }

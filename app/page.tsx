@@ -1,5 +1,5 @@
-// app/page.tsx
 'use client';
+import { CalendarClock, ClipboardList, LaptopMinimalCheck, NotebookPen } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -38,13 +38,12 @@ export default function Dashboard() {
     });
   };
 
-
   if (loading) return <div className="flex justify-center items-center min-h-screen">Загрузка...</div>;
 
   return (
     <div className="flex flex-col items-center px-6 py-10">
       {/* HEADER */}
-      <h1 className="text-3xl md:text-4xl font-bold mb-2">🦷 Dental Study Assistant</h1>
+      <h1 className="text-3xl md:text-4xl font-bold mb-2">Dental Study Assistant</h1>
       <p className="text-gray-600 mb-8 text-center text-base md:text-xl">
         Добро пожаловать! Сегодня у вас {pendingTasks.length} незавершённых задач и {notes.length} заметок.
       </p>
@@ -54,7 +53,7 @@ export default function Dashboard() {
         {/* TASKS */}
         <div className="bg-white rounded-2xl shadow p-5">
           <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
-            📅 Задачи на сегодня
+            <ClipboardList /> Задачи на сегодня
           </h2>
           {pendingTasks.length === 0 ? (
             <p className="text-gray-500">Все задачи выполнены 🎉</p>
@@ -78,7 +77,7 @@ export default function Dashboard() {
 
         {/* NOTES */}
         <div className="bg-white rounded-2xl shadow p-5">
-          <h2 className="text-xl font-semibold mb-3">🧾 Последние заметки</h2>
+          <h2 className="text-xl font-semibold mb-3 flex items-center gap-2"><NotebookPen /> Последние заметки</h2>
           {notes.length === 0 ? (
             <p className="text-gray-500">Пока нет заметок.</p>
           ) : (
@@ -95,7 +94,7 @@ export default function Dashboard() {
         </div>
         
         <div className="bg-white rounded-2xl shadow p-5 mb-6">
-          <h2 className="text-xl font-semibold mb-3">📊 Прогресс дня</h2>
+          <h2 className="text-xl font-semibold mb-3 flex items-center gap-2"><LaptopMinimalCheck /> Прогресс дня</h2>
           <div className="w-full bg-gray-200 rounded-full h-4">
             <div
               className="bg-pink-500 h-4 rounded-full transition-all duration-300"
@@ -108,7 +107,7 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-white rounded-2xl shadow p-5 mb-6 flex flex-col items-center">
-          <h2 className="text-xl font-semibold mb-2">📅 Сегодня</h2>
+          <h2 className="text-xl font-semibold mb-2 flex items-center gap-2"><CalendarClock /> Сегодня</h2>
           <div className="text-4xl font-bold">{new Date().getDate()}</div>
           <div className="text-gray-500">{new Date().toLocaleString('ru-RU', { weekday: 'long' })}</div>
         </div>
