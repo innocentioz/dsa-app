@@ -13,10 +13,11 @@ const S3 = new S3Client({
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = Number(params.id);
+    const { id: idParam } = await params;
+    const id = Number(idParam);
 
     const track = await prisma.track.findUnique({ where: { id } });
     if (!track) {
