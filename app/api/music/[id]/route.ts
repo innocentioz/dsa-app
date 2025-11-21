@@ -11,10 +11,10 @@ const S3 = new S3Client({
   },
 });
 
-export const DELETE = async (
+export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
-) => {
+) {
   try {
     const id = Number(params.id);
 
@@ -47,4 +47,4 @@ export const DELETE = async (
       { status: 500 }
     );
   }
-};
+}
