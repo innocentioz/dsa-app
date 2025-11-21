@@ -2,8 +2,9 @@
 import { CalendarClock, ClipboardList, LaptopMinimalCheck, NotebookPen } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
-type Task = { id: number; title: string; completed: boolean; deadline?: string };
+type Task = { id: number; title: string; completed: boolean; deadline?: string; status: string; };
 type Note = { id: number; title: string; content: string };
 
 export default function Dashboard() {
@@ -43,7 +44,12 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col items-center px-6 py-10">
       {/* HEADER */}
-      <h1 className="text-3xl md:text-4xl font-bold mb-2">Dental Study Assistant</h1>
+      <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-2">
+        <div className='w-16 h-16'>
+          <Image src="/images/logo.png" width={1920} height={1080} alt="Logo" className="object-contain w-full h-full" />
+        </div>
+        Dental Study Assistant
+      </h1>
       <p className="text-gray-600 mb-8 text-center text-base md:text-xl">
         Добро пожаловать! Сегодня у вас {pendingTasks.length} незавершённых задач и {notes.length} заметок.
       </p>
@@ -56,7 +62,7 @@ export default function Dashboard() {
             <ClipboardList /> Задачи на сегодня
           </h2>
           {pendingTasks.length === 0 ? (
-            <p className="text-gray-500">Все задачи выполнены 🎉</p>
+            <p className="text-gray-500">Все задачи выполнены</p>
           ) : (
             <ul className="space-y-2">
               {pendingTasks.slice(0, 4).map(t => (
@@ -104,9 +110,10 @@ export default function Dashboard() {
           <p className="text-gray-500 text-sm mt-2">
             {completedTasksCount} из {totalTasksCount} задач выполнено
           </p>
+          
         </div>
 
-        <div className="bg-white rounded-2xl shadow p-5 mb-6 flex flex-col items-center">
+        <div className="bg-white rounded-2xl shadow p-5 mb-6 flex flex-col">
           <h2 className="text-xl font-semibold mb-2 flex items-center gap-2"><CalendarClock /> Сегодня</h2>
           <div className="text-4xl font-bold">{new Date().getDate()}</div>
           <div className="text-gray-500">{new Date().toLocaleString('ru-RU', { weekday: 'long' })}</div>

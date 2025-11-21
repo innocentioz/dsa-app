@@ -12,8 +12,8 @@ export default function FancyCalendar() {
   const [date, setDate] = useState<Value>(new Date());
 
   return (
-    <div className="bg-gradient-to-br from-pink-50 via-white to-pink-50 p-8 rounded-3xl shadow-2xl max-w-md mx-auto border border-pink-100">
-      <h2 className="flex items-center justify-center gap-3 text-2xl font-extrabold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-pink-400">
+    <div className="from-pink-50 via-white to-pink-50 p-8 rounded-3xl shadow-2xl max-w-md mx-auto border border-pink-100">
+      <h2 className="flex items-center justify-center gap-3 text-2xl font-extrabold text-center mb-6 bg-clip-text text-pink-500 from-pink-500 to-pink-400">
         <Flower size={36} color='pink'/> Календарь
       </h2>
       <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-inner border border-pink-100">

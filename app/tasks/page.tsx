@@ -162,7 +162,7 @@ function TaskColumn({
 
   return (
     <div
-      className="flex-shrink-0 w-80 bg-white rounded-2xl p-3 overflow-y-scroll custom-scrollbar"
+      className="shrink-0 w-80 bg-white rounded-2xl p-3 overflow-y-scroll custom-scrollbar"
       onDragOver={onDragOver}
       onDrop={onDrop}
     >

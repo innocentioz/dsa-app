@@ -134,9 +134,9 @@ export default function Timer() {
   };
 
   return (
-    <div className="flex justify-center bg-gradient-to-br">
+    <div className="flex justify-center bg-linear-to-br">
       <div className="bg-white rounded-2xl shadow-xl p-12 w-full max-w-md text-center">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">⏱️ Интерактивный таймер</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Интерактивный таймер</h2>
 
         {/* Ввод времени */}
         <div className="mb-6 flex flex-col justify-center items-center gap-6">

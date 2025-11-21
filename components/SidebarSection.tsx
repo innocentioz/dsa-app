@@ -24,7 +24,7 @@ export function SidebarSection({ title, items }: SidebarSectionProps) {
               href={item.link}
               className="flex items-center space-x-3 px-3 py-3 hover:bg-gray-100 font-semibold rounded-2xl transition"
             >
-              <span>{item.icon}</span>
+              <span className='object-contain'>{item.icon}</span>
               <span>{item.app}</span>
             </Link>
           </li>

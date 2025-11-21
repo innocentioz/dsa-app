@@ -9,15 +9,15 @@ export default function LeftSidebar() {
     const [open, setOpen] = useState(false)
 
     const appsList = [
-        { link: "notes", app: "Заметки", icon: <Notebook />},
-        { link: "tasks", app: "Задачи", icon: <PictureInPicture2 />},
-        { link: "calendar", app: "Календарь", icon: <Calendar1 />},
-        { link: "timer", app: "Таймер", icon: <Hourglass />},
-        { link: "music", app: "Музыка", icon: <Music />},
-
+        { link: "notes", app: "Заметки", icon: <Image src={"/images/note.png"} alt={"Note"} width={1920} height={1080} className="w-10 h-10"/>},
+        { link: "tasks", app: "Задачи", icon: <Image src={"/images/bow.png"} alt={"Bow"} width={1920} height={1080} className="w-10 h-10"/>},
+        { link: "calendar", app: "Календарь", icon: <Image src={"/images/cat.png"} alt={"Cat"} width={1920} height={1080} className="w-10 h-10"/>},
+        { link: "timer", app: "Таймер", icon: <Image src={"/images/candle.png"} alt={"Candle"} width={1920} height={1080} className="w-10 h-10"/>},
+        { link: "music", app: "Музыка", icon: <Image src={"/images/disk.png"} alt={"Disk"} width={1920} height={1080} className="w-10 h-10"/>},
     ]
+    
     const homeList = [
-        { link: "/", app: "Панель",  icon: <House />}
+        { link: "/", app: "Панель",  icon: <Image src={"/images/rose.png"} alt={"Note"} width={1920} height={1080} className="w-10 h-10"/>}
     ]
 
     return (
@@ -60,7 +60,7 @@ export default function LeftSidebar() {
                 {/* Заголовок */}
                 <div className="flex items-end gap-3 py-4">
                     <div className="w-12 h-12"> 
-                        <Image src="/logo.png" width={48} height={48} alt="" className="object-contain w-full h-full" />
+                        <Image src="/images/logo.png" width={48} height={48} alt="Logo" className="object-contain w-full h-full" />
                     </div>
                     <h1 className="font-bold text-2xl text-black-500">Dental Study Assitant</h1>
                 </div>
